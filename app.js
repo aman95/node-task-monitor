@@ -15,11 +15,12 @@ const ProcessSchema = {
     name:  'string',
     pid: 'int',
     type: 'string',
+    isCompleted: {type: 'bool', default: false},
     entry_time: {type: 'date', optional:true},
     start_time: 'date',
     end_time: {type:'date', optional:true},
-    execution_time: {type: 'int', optional:true},
-    wait_time: {type: 'int', optional:true},
+    // execution_time: {type: 'int', optional:true},
+    // wait_time: {type: 'int', optional:true},
     logs: {type: 'data', optional: true},
     payload: {type: 'string', optional:true}
   }
@@ -37,18 +38,25 @@ redis.on('message', function(channel, message) {
 
 	var data = JSON.parse(message);
 
-	// console.log('Message: '+data.hash+' Channel: '+channel);
+	console.log('Message: '+data.hash+' Channel: '+channel);
 
 	var modelData = {};
 	modelData.hash = data.hash;
 	modelData.name = data.name;
 	modelData.pid = data.pid;
 	modelData.type = data.type;
+
+	if(data.entry_time && data.entry_time != null) {
+		modelData.start_time = new Date(Date.parse(data.entry_time));
+		modelData.entry_time = new Date(Date.parse(data.entry_time));
+	}
+
 	if(data.start_time && data.start_time != null) {
 		modelData.start_time = new Date(Date.parse(data.start_time));
 	}
 	if(data.end_time && data.end_time != null) {
 		modelData.end_time = new Date(Date.parse(data.end_time));
+		modelData.isCompleted = true;
 	}
 	if(data.payload && data.payload != null) {
 		modelData.payload = data.payload;
