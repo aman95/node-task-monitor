@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Task Monitor</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="assets/metricsgraphics.css">
+	<script src="assets/metricsgraphics.min.js"></script>
+</head>
+<body>
+
+<div id="first"></div>
+<div id="incomplete">
+	
+</div>
+
+<script type="text/javascript">
+$.getJSON('/', function(data) {
+	console.log(JSON.stringify(data));
+
+	var cdata = [];
+	var incomplete = [];
+
+	$.each(data, function(index, element) {
+		var obj = {};
+		obj.pid = element.pid;
+		obj.hash = element.hash;
+		obj.start_time = element.start_time;
+		
+		if(element.end_time == undefined || element.end_time == null) {
+			incomplete.unshift(element);
+			
+		} else {
+			obj.end_time = element.end_time;
+			obj.duration = (Date.parse(element.end_time)-Date.parse(element.start_time))/1000;
+			cdata.unshift(obj);
+		}
+		document.getElementById('incomplete').innerHTML = "incomplete tasks: "+incomplete.length;
+	});
+
+    cdata = MG.convert.date(cdata, 'start_time', '%Y-%m-%dT%H:%M:%S.%LZ');
+    console.log(cdata);
+    MG.data_graphic({
+        title: "Line Chart",
+        description: "This is a simple line chart. You can remove the area portion by adding area: false to the arguments list.",
+        data: cdata,
+        width: 600,
+        height: 400,
+        right: 40,
+        target: document.getElementById('first'),
+        x_accessor: 'start_time',
+        y_accessor: 'duration'
+    });
+});
+</script>
+
+</body>
+</html>
