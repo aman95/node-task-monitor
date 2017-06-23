@@ -15,11 +15,13 @@
 </div>
 
 <script type="text/javascript">
-$.getJSON('/api/v1/stats/CalculateQuestionProfile', function(data) {
+var name = window.location.hash.substr(1);
+$.getJSON('/api/v1/stats/'+name, function(data) {
 	// console.log(JSON.stringify(data));
 
 	var cdata = [];
 	var incomplete = [];
+
 
 	$.each(data, function(index, element) {
 		var obj = {};
