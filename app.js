@@ -80,6 +80,6 @@ app.get('/api/v1/stats/:name', function (req, res) {
 
 app.use('/', express.static('public'));
 
-app.listen(3300, function () {
+app.listen(3300, '0.0.0.0', function () {
   	console.log('Task Monitor listening on port 3300!');
 });
