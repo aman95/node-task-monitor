@@ -27,7 +27,7 @@ $.getJSON('/api/v1/stats/'+name, function(data) {
 		var obj = {};
 		obj.pid = element.pid;
 		obj.hash = element.hash;
-		obj.start_time = element.start_time;
+		obj.start_time = (new Date(Date.parse(element.start_time))).toLocaleString();
 		
 		if(element.end_time == undefined || element.end_time == null) {
 			incomplete.unshift(element);
@@ -40,7 +40,8 @@ $.getJSON('/api/v1/stats/'+name, function(data) {
 		document.getElementById('incomplete').innerHTML = "incomplete tasks: "+incomplete.length;
 	});
 
-    cdata = MG.convert.date(cdata, 'start_time', '%Y-%m-%dT%H:%M:%S.%LZ');
+    // cdata = MG.convert.date(cdata, 'start_time', '%Y-%m-%dT%H:%M:%S.%LZ');
+    cdata = MG.convert.date(cdata, 'start_time', '%Y-%m-%d %H:%M:%S');
     // console.log(cdata);
     MG.data_graphic({
         title: "Line Chart",
