@@ -15,8 +15,8 @@
 </div>
 
 <script type="text/javascript">
-$.getJSON('/', function(data) {
-	console.log(JSON.stringify(data));
+$.getJSON('/api/v1/stats/CalculateQuestionProfile', function(data) {
+	// console.log(JSON.stringify(data));
 
 	var cdata = [];
 	var incomplete = [];
@@ -39,7 +39,7 @@ $.getJSON('/', function(data) {
 	});
 
     cdata = MG.convert.date(cdata, 'start_time', '%Y-%m-%dT%H:%M:%S.%LZ');
-    console.log(cdata);
+    // console.log(cdata);
     MG.data_graphic({
         title: "Line Chart",
         description: "This is a simple line chart. You can remove the area portion by adding area: false to the arguments list.",

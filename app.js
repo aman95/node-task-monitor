@@ -15,8 +15,11 @@ const ProcessSchema = {
     name:  'string',
     pid: 'int',
     type: 'string',
+    entry_time: {type: 'date', optional:true},
     start_time: 'date',
     end_time: {type:'date', optional:true},
+    execution_time: {type: 'int', optional:true},
+    wait_time: {type: 'int', optional:true},
     logs: {type: 'data', optional: true},
     payload: {type: 'string', optional:true}
   }
@@ -57,14 +60,17 @@ redis.on('message', function(channel, message) {
 
 });
 
-app.get('/', function (req, res) {
+app.get('/api/v1/stats/:name', function (req, res) {
 
 	let processes = realm.objects('Process');
-	var arr = Object.keys(processes).map(function(k) { return processes[k] });
+	// console.log(req.params.name);
+	var data = processes.filtered('name = "'+req.params.name+'"');
+	// data = processes;
+	var arr = Object.keys(data).map(function(k) { return data[k] });
   	res.json(arr);
 });
 
-app.use('/stats', express.static('public'));
+app.use('/', express.static('public'));
 
 app.listen(3300, function () {
   	console.log('Task Monitor listening on port 3300!');
